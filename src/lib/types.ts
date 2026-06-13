@@ -8,9 +8,13 @@ export interface Transaction {
   note: string;
   date: string; // YYYY-MM-DD
   created_at?: string;
+  user_id?: string;
 }
 
-export type NewTransaction = Omit<Transaction, "id" | "created_at">;
+export type NewTransaction = Omit<
+  Transaction,
+  "id" | "created_at" | "user_id"
+>;
 
 export const INCOME_CATEGORIES = [
   "เงินเดือน",

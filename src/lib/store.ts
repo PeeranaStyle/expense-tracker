@@ -56,9 +56,13 @@ export async function createTransaction(
   tx: NewTransaction
 ): Promise<Transaction> {
   if (isSupabaseConfigured && supabase) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) throw new Error("กรุณาเข้าสู่ระบบก่อนบันทึกรายการ");
     const { data, error } = await supabase
       .from(TRANSACTIONS_TABLE)
-      .insert(tx)
+      .insert({ ...tx, user_id: user.id })
       .select()
       .single();
     if (error) throw error;

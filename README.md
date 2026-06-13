@@ -4,6 +4,7 @@
 
 ## ฟีเจอร์
 
+- **ระบบผู้ใช้** — สมัคร/เข้าสู่ระบบด้วยอีเมล+รหัสผ่าน (Supabase Auth), เก็บ session อัตโนมัติ, แยกข้อมูลของแต่ละผู้ใช้ด้วย Row Level Security
 - เพิ่ม / ลบ รายการรายรับและรายจ่าย พร้อมหมวดหมู่ วันที่ และรายละเอียด
 - สรุปยอดรายรับรวม รายจ่ายรวม และยอดคงเหลือ
 - กรองข้อมูลตามเดือน
@@ -35,7 +36,10 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-4. รีสตาร์ท dev server
+4. (แนะนำ) ปิดการยืนยันอีเมลเพื่อให้สมัครได้ทันที: Authentication → Providers → Email → ปิด "Confirm email"
+5. รีสตาร์ท dev server
+
+> เมื่อตั้งค่า Supabase แล้ว แอปจะบังคับให้เข้าสู่ระบบก่อนใช้งาน และผู้ใช้แต่ละคนจะเห็นเฉพาะรายการของตัวเอง
 
 ## โครงสร้างโปรเจค
 
@@ -49,8 +53,10 @@ src/
     TransactionForm.tsx
     TransactionList.tsx
     ExportBar.tsx     # ปุ่มส่งออก Excel / PDF / รูปภาพ
+    AuthForm.tsx      # หน้า login / register
   lib/
     supabase.ts       # Supabase client
+    auth.tsx          # AuthProvider + useAuth (จัดการ session)
     store.ts          # data layer (Supabase หรือ localStorage)
     export.ts         # ฟังก์ชันส่งออก
     format.ts         # จัดรูปแบบเงิน/วันที่
