@@ -13,8 +13,14 @@ function translateError(message: string): string {
     return "อีเมลนี้ถูกใช้สมัครแล้ว";
   if (m.includes("password should be at least"))
     return "รหัสผ่านสั้นเกินไป (อย่างน้อย 6 ตัวอักษร)";
-  if (m.includes("unable to validate email") || m.includes("invalid email"))
-    return "รูปแบบอีเมลไม่ถูกต้อง";
+  if (
+    m.includes("unable to validate email") ||
+    m.includes("invalid email") ||
+    (m.includes("email") && m.includes("invalid"))
+  )
+    return "อีเมลนี้ใช้ไม่ได้ กรุณาใช้อีเมลจริง";
+  if (m.includes("for security purposes") || m.includes("rate limit"))
+    return "ลองบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่";
   if (m.includes("email not confirmed"))
     return "ยังไม่ได้ยืนยันอีเมล กรุณาตรวจสอบกล่องอีเมล";
   return message;
