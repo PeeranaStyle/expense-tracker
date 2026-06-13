@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# บันทึกรายรับ-รายจ่าย (Expense Tracker)
 
-## Getting Started
+เว็ปแอปบันทึกรายรับ-รายจ่าย สร้างด้วย **Next.js + TypeScript + Tailwind CSS** ใช้ **Supabase** เป็นฐานข้อมูล และสามารถส่งออกรายงานเป็น **Excel, PDF และรูปภาพ** ได้
 
-First, run the development server:
+## ฟีเจอร์
+
+- เพิ่ม / ลบ รายการรายรับและรายจ่าย พร้อมหมวดหมู่ วันที่ และรายละเอียด
+- สรุปยอดรายรับรวม รายจ่ายรวม และยอดคงเหลือ
+- กรองข้อมูลตามเดือน
+- ส่งออกรายงาน:
+  - **Excel** (`.xlsx`) — ผ่าน [SheetJS (xlsx)](https://sheetjs.com/)
+  - **PDF** — เรนเดอร์รายงานเป็นรูปแล้วใส่ใน PDF (รองรับภาษาไทยเต็มรูปแบบ) ผ่าน [jsPDF](https://github.com/parallax/jsPDF) + [html2canvas-pro](https://github.com/yorickshan/html2canvas-pro)
+  - **รูปภาพ** (`.png`)
+- ใช้ Supabase เป็นฐานข้อมูล โดยมี **โหมดสาธิต** ที่เก็บข้อมูลใน `localStorage` อัตโนมัติเมื่อยังไม่ได้ตั้งค่า Supabase
+
+## เริ่มต้นใช้งาน
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+เปิด http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> หากยังไม่ได้ตั้งค่า Supabase แอปจะทำงานในโหมดสาธิต โดยเก็บข้อมูลไว้ในเบราว์เซอร์
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ตั้งค่า Supabase
 
-## Learn More
+1. สร้างโปรเจคที่ [supabase.com](https://supabase.com)
+2. รันสคริปต์ใน [`supabase/schema.sql`](supabase/schema.sql) ใน SQL Editor
+3. คัดลอก `.env.local.example` เป็น `.env.local` แล้วใส่ค่าจาก Project Settings → API:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. รีสตาร์ท dev server
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## โครงสร้างโปรเจค
 
-## Deploy on Vercel
+```
+src/
+  app/
+    layout.tsx
+    page.tsx          # หน้าหลัก รวม state ทั้งหมด
+  components/
+    Summary.tsx       # การ์ดสรุปยอด
+    TransactionForm.tsx
+    TransactionList.tsx
+    ExportBar.tsx     # ปุ่มส่งออก Excel / PDF / รูปภาพ
+  lib/
+    supabase.ts       # Supabase client
+    store.ts          # data layer (Supabase หรือ localStorage)
+    export.ts         # ฟังก์ชันส่งออก
+    format.ts         # จัดรูปแบบเงิน/วันที่
+    types.ts
+supabase/
+  schema.sql
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## คำสั่ง
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run dev     # โหมดพัฒนา
+npm run build   # build สำหรับ production
+npm run start   # รัน production build
+npm run lint    # ตรวจ lint
+```
